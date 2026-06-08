@@ -93,11 +93,11 @@ def remove_native_border(widget: QWidget):
 
 def make_tray_icon() -> QIcon:
     pixmap = QPixmap(64, 64)
-    pixmap.fill(Qt.transparent)
+    pixmap.fill(Qt.GlobalColor.transparent)
 
     painter = QPainter(pixmap)
-    painter.setRenderHint(QPainter.Antialiasing)
-    painter.setPen(Qt.NoPen)
+    painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+    painter.setPen(Qt.PenStyle.NoPen)
     painter.setBrush(QColor("#f8d66d"))
     painter.drawRoundedRect(10, 8, 44, 48, 10, 10)
     painter.setBrush(QColor("#fff4bf"))
@@ -110,15 +110,15 @@ def make_tray_icon() -> QIcon:
 
 def make_action_icon(name: str, color: QColor) -> QIcon:
     pixmap = QPixmap(48, 48)
-    pixmap.fill(Qt.transparent)
+    pixmap.fill(Qt.GlobalColor.transparent)
 
     painter = QPainter(pixmap)
-    painter.setRenderHint(QPainter.Antialiasing)
+    painter.setRenderHint(QPainter.RenderHint.Antialiasing)
     painter.setPen(color)
-    painter.setBrush(Qt.NoBrush)
+    painter.setBrush(Qt.BrushStyle.NoBrush)
 
     if name == "pin":
-        painter.setPen(Qt.NoPen)
+        painter.setPen(Qt.PenStyle.NoPen)
         painter.setBrush(color)
         painter.drawRoundedRect(18, 8, 14, 18, 4, 4)
         painter.drawPolygon(QPolygon([QPoint(15, 24), QPoint(35, 24), QPoint(24, 35)]))
@@ -126,7 +126,7 @@ def make_action_icon(name: str, color: QColor) -> QIcon:
         painter.drawLine(24, 32, 24, 42)
     elif name == "save":
         painter.setPen(color)
-        painter.setBrush(Qt.NoBrush)
+        painter.setBrush(Qt.BrushStyle.NoBrush)
         painter.drawRoundedRect(11, 9, 26, 30, 4, 4)
         painter.drawLine(17, 9, 17, 20)
         painter.drawLine(30, 9, 30, 19)
@@ -145,13 +145,13 @@ def make_action_icon(name: str, color: QColor) -> QIcon:
         ]:
             painter.drawLine(x1, y1, x2, y2)
     elif name == "moon":
-        painter.setPen(Qt.NoPen)
+        painter.setPen(Qt.PenStyle.NoPen)
         painter.setBrush(color)
         painter.drawEllipse(13, 9, 25, 30)
         painter.setBrush(QColor(0, 0, 0, 0))
-        painter.setCompositionMode(QPainter.CompositionMode_Clear)
+        painter.setCompositionMode(QPainter.CompositionMode.CompositionMode_Clear)
         painter.drawEllipse(23, 6, 23, 30)
-        painter.setCompositionMode(QPainter.CompositionMode_SourceOver)
+        painter.setCompositionMode(QPainter.CompositionMode.CompositionMode_SourceOver)
     elif name == "trash":
         painter.drawLine(15, 16, 33, 16)
         painter.drawLine(20, 11, 28, 11)
@@ -172,7 +172,7 @@ class IconButton(QPushButton):
         self.setToolTip(tooltip)
         self.setFixedSize(32, 30)
         self.setIconSize(QSize(18, 18))
-        self.setCursor(Qt.PointingHandCursor)
+        self.setCursor(Qt.CursorShape.PointingHandCursor)
 
 
 class HotZone(QWidget):
@@ -183,13 +183,13 @@ class HotZone(QWidget):
         self.handle_color = QColor(31, 31, 34, 255)
         self.grip_color = QColor(170, 170, 178, 120)
         self.setWindowFlags(
-            Qt.FramelessWindowHint
-            | Qt.Tool
-            | Qt.WindowStaysOnTopHint
-            | Qt.WindowDoesNotAcceptFocus
-            | Qt.NoDropShadowWindowHint
+            Qt.WindowType.FramelessWindowHint
+            | Qt.WindowType.Tool
+            | Qt.WindowType.WindowStaysOnTopHint
+            | Qt.WindowType.WindowDoesNotAcceptFocus
+            | Qt.WindowType.NoDropShadowWindowHint
         )
-        self.setAttribute(Qt.WA_TranslucentBackground)
+        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         self.setFixedSize(HOT_ZONE_WIDTH, HOT_ZONE_HEIGHT)
         remove_native_border(self)
         self.place_at_top_center()
@@ -231,8 +231,8 @@ class HotZone(QWidget):
 
     def paintEvent(self, event):
         painter = QPainter(self)
-        painter.setRenderHint(QPainter.Antialiasing)
-        painter.setPen(Qt.NoPen)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        painter.setPen(Qt.PenStyle.NoPen)
         tab_width = 96
         tab_height = 22
         radius = 8
@@ -278,12 +278,12 @@ class NoteWindow(QWidget):
         self.loading_note = False
 
         self.setWindowFlags(
-            Qt.FramelessWindowHint
-            | Qt.Tool
-            | Qt.WindowStaysOnTopHint
-            | Qt.NoDropShadowWindowHint
+            Qt.WindowType.FramelessWindowHint
+            | Qt.WindowType.Tool
+            | Qt.WindowType.WindowStaysOnTopHint
+            | Qt.WindowType.NoDropShadowWindowHint
         )
-        self.setAttribute(Qt.WA_TranslucentBackground)
+        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         self.setFixedSize(NOTE_WIDTH, NOTE_HEIGHT)
         remove_native_border(self)
 
@@ -297,7 +297,7 @@ class NoteWindow(QWidget):
 
         self.animation = QPropertyAnimation(self, b"geometry", self)
         self.animation.setDuration(SHOW_ANIMATION_MS)
-        self.animation.setEasingCurve(QEasingCurve.OutCubic)
+        self.animation.setEasingCurve(QEasingCurve.Type.OutCubic)
         self.animation.valueChanged.connect(self.on_geometry_value_changed)
         self.animation.finished.connect(self.on_animation_finished)
 
@@ -325,7 +325,7 @@ class NoteWindow(QWidget):
 
         self.titlebar = QFrame()
         self.titlebar.setObjectName("titlebar")
-        self.titlebar.setCursor(Qt.OpenHandCursor)
+        self.titlebar.setCursor(Qt.CursorShape.OpenHandCursor)
         self.titlebar.mousePressEvent = self.start_drag
         self.titlebar.mouseMoveEvent = self.drag_window
         self.titlebar.mouseReleaseEvent = self.end_drag
@@ -361,7 +361,7 @@ class NoteWindow(QWidget):
         self.note_list = QListWidget()
         self.note_list.setObjectName("noteList")
         self.note_list.setFixedWidth(138)
-        self.note_list.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.note_list.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.note_list.setSpacing(4)
         self.note_list.currentItemChanged.connect(self.on_note_selected)
 
@@ -387,7 +387,7 @@ class NoteWindow(QWidget):
         layout.addWidget(content, 1)
 
         font = QFont("Segoe UI", 10)
-        font.setStyleStrategy(QFont.PreferAntialias)
+        font.setStyleStrategy(QFont.StyleStrategy.PreferAntialias)
         self.setFont(font)
 
     def reset_default_geometry(self):
@@ -445,9 +445,9 @@ class NoteWindow(QWidget):
             self.hide_timer.start(AUTO_HIDE_DELAY_MS)
 
     def start_drag(self, event):
-        if event.button() == Qt.LeftButton:
+        if event.button() == Qt.MouseButton.LeftButton:
             self.drag_offset = event.globalPosition().toPoint() - self.frameGeometry().topLeft()
-            self.titlebar.setCursor(Qt.ClosedHandCursor)
+            self.titlebar.setCursor(Qt.CursorShape.ClosedHandCursor)
 
     def drag_window(self, event):
         if self.drag_offset is None:
@@ -468,7 +468,7 @@ class NoteWindow(QWidget):
 
     def end_drag(self, event):
         self.drag_offset = None
-        self.titlebar.setCursor(Qt.OpenHandCursor)
+        self.titlebar.setCursor(Qt.CursorShape.OpenHandCursor)
 
     def toggle_pin(self):
         self.pinned = not self.pinned
@@ -543,7 +543,7 @@ class NoteWindow(QWidget):
         sorted_notes = sorted(self.notes, key=lambda item: item.get("updated_at", 0), reverse=True)
         for note in sorted_notes:
             item = QListWidgetItem(self.note_title(note))
-            item.setData(Qt.UserRole, note.get("id"))
+            item.setData(Qt.ItemDataRole.UserRole, note.get("id"))
             item.setSizeHint(QSize(96, 30))
             self.note_list.addItem(item)
             if note.get("id") == selected_id:
@@ -555,7 +555,7 @@ class NoteWindow(QWidget):
         if current is None:
             return
         self.update_current_note_text()
-        self.current_note_id = current.data(Qt.UserRole)
+        self.current_note_id = current.data(Qt.ItemDataRole.UserRole)
         self.select_note(self.current_note_id, update_editor=True)
         self.save_timer.start(SAVE_DEBOUNCE_MS)
 
@@ -776,7 +776,7 @@ class TopNoteApp:
         return menu
 
     def on_tray_activated(self, reason):
-        if reason == QSystemTrayIcon.Trigger:
+        if reason == QSystemTrayIcon.ActivationReason.Trigger:
             self.note.show_note()
 
     def quit(self):
